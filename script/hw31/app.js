@@ -21,13 +21,17 @@ let user = {
 }
 
 
-function bindingFunc (obj, someArg, anotherArg) {
-    return () => {return `${obj.name} ${obj.lastname}, ${someArg}, ${anotherArg}`};
+function getFullName (arg1, arg2) {
+    return `${this.name} ${this.lastname} ${arg1} ${arg2}`;
 }
 
 
-const boundFunc = bindingFunc(person, 'wind', 'of change');
-const secondBoundFunc = bindingFunc(user, 'Russian battleship', 'go away');
 
-console.log(boundFunc());
-console.log(secondBoundFunc());
+const binding = (func, obj, ...bindingArgs) => (...args) => {
+        return func.call(obj, ...bindingArgs, ...args);
+}
+
+const boundFunction = binding(getFullName, user, 'get', 'lost');
+const secondBoundFunction = binding(getFullName, person, 'is a good', 'boy');
+console.log(boundFunction());
+console.log(secondBoundFunction());
